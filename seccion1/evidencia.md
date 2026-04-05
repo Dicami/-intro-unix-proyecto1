@@ -1,0 +1,197 @@
+1. What is LUKS and what is its relationship with dm-crypt in the Linux kernel? 
+Explain the role of the Device Mapper in the encryption process.
+
+
+According to Red Hat Documentation (s.f.), Linux Unified Key Setup (LUKS) is a 
+specification for block device encryption. It is used to encrypt Linux hard 
+drives and to protect the contents of mobile devices. 
+
+
+The relationship with dm-crypt is that LUKS uses the kernel Device Mapper 
+subsystem through the dm-crypt module. In this way, dm-crypt provides a 
+low-level mapping that handles the encryption and decryption of the device's 
+data.
+
+
+The Device Mapper is a kernel driver that provides a framework for volume 
+management. In the encryption process, its role is to map a virtual encrypted 
+device to the underlying physical storage.
+
+2. What is the difference between full disk encryption (FDE) and 
+filesystem-level encryption? Mention two advantages and two 
+limitations of each.
+
+
+Full Disk Encryption (FDE)
+
+
+Definition
+
+According to Brendon Baxter (2022), full disk encryption (FDE) refers to the 
+process in which every piece of data on a disk is encrypted using a single 
+encryption key. It protects data stored on a device, but it cannot protect 
+data in motion or in use.
+
+
+Difference
+
+As mentioned in the definition, the first difference is that full disk 
+encryption (FDE) encrypts every piece of data on a disk using a single 
+encryption key. (Baxter, 2022)
+
+
+Advantages
+
+According to Darren James (2024) the benefits are:
+
+
+Complete data protection  
+All data on the disk, whether sensitive or not, is encrypted. This ensures 
+that unauthorized users cannot access any information if the device is lost 
+or stolen.
+
+
+Automatic encryption  
+All files and folders are encrypted by default, so users do not need to 
+manually select what to protect. This minimizes the risk of forgetting to 
+encrypt important data.
+
+
+Limitations
+
+According to Cigent (2021) the limitations are:
+
+
+Does not protect data in transit  
+FDE only protects data stored on the device, not data being sent through 
+email, cloud services, or external drives.
+
+
+Can reduce system performance  
+Encryption and decryption processes may slow down the system, especially 
+because the entire disk, including the operating system, is encrypted.
+
+
+
+Filesystem-Level Encryption
+
+
+Definition
+
+According to JumpCloud (2025), filesystem-level encryption focuses on 
+securing individual files, ensuring that sensitive data remains safe even 
+if part of the system is compromised.
+
+
+Difference
+
+As mentioned in the definition, the second difference is that filesystem-
+level encryption protects individual files or folders. It provides an 
+additional layer of security by protecting specific data even if the device 
+is already unlocked. (JumpCloud, 2025)
+
+
+Advantages
+
+According to Everpure (s.f.) the benefits are:
+
+
+Protection of sensitive data even after a breach  
+Encrypted files remain unreadable if they are stolen or exfiltrated by an 
+attacker. Without the encryption key, the data cannot be accessed or used.
+
+
+Granular control over what is encrypted  
+Administrators can choose specific files or folders to encrypt, allowing 
+protection of sensitive data without encrypting the entire system.
+
+
+Limitations
+
+According to eSecurity Planet (2020) the limitations are:
+
+
+Compatibility issues  
+FBE may not work across all operating systems, especially when using 
+different encryption software.
+
+
+Complex key management  
+Managing multiple encryption keys can be difficult and requires additional 
+tools, effort, and cost. 
+
+
+It creates mapped devices and uses a mapping table to describe how the data 
+is organized. Through dm-crypt, the Device Mapper enables transparent 
+encryption and decryption of data as it is written to and read from the disk 
+(Red Hat Documentation, s.f.).
+
+3. What is LVM and what are its three abstraction layers (PV, VG, LV)? 
+What are the advantages of LVM compared to traditional partitioning 
+in a server environment?
+
+
+According to Justin Ellingwood (2022), Logical Volume Management (LVM) 
+is a storage management technology that allows users to combine and 
+abstract the physical structure of storage devices, enabling more 
+flexible administration. 
+
+
+The three abstraction layers are:
+
+
+Physical Volumes (PV)  
+The LVM utility prefix for physical volumes is pv. These are the actual 
+physical storage devices (such as disks or partitions) used by LVM as 
+the base layer. They provide the raw storage that will be managed.
+
+
+Volume Groups (VG)  
+The LVM utility prefix for volume groups is vg. These combine multiple 
+physical volumes into a single storage pool, creating a unified logical 
+space with the total capacity of all devices.
+
+
+Logical Volumes (LV)  
+The LVM utility prefix for logical volumes is lv. These are created from 
+volume groups and function like flexible partitions that users and 
+applications can interact with.
+
+
+Unlike traditional partitioning, where disk management depends on the 
+user and poor allocation can lead to lack of space or system issues, 
+LVM provides greater flexibility. 
+
+
+It allows easy resizing of volumes without using external tools and 
+without interrupting the system. Additionally, it enables dynamic 
+storage expansion by adding new disks, adapting to server needs and 
+reducing human errors. (ytelearning, 2016)
+
+
+
+4. Explain what happen during boot process in a system with LUKS+LVM. 
+At what point is the decryption password requested, and what role does 
+GRUB play in this process?
+
+
+During the boot process of a system with LUKS + LVM, the BIOS calls 
+GRUB, which loads the kernel and the initramfs, passing the necessary 
+parameters to start the system. 
+
+
+The initramfs runs cryptsetup, requesting the decryption password to 
+unlock the LUKS partition containing the LVM volumes. Once unlocked, 
+the volume groups (VG) and logical volumes (LV) are activated, and the 
+root / is mounted. 
+
+
+Finally, the system continues its normal boot by executing /sbin/init.  
+(Reddit, 2023)
+
+
+In a system with LUKS + LVM, the decryption password is requested 
+during the boot process when the system attempts to access the 
+encrypted partition that contains the LVM volumes, using tools such 
+as cryptsetup. (Linux alpino, s.f.)
+
